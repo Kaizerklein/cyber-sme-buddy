@@ -93,14 +93,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
-    toast({
-      title: "Signed out",
-      description: "You have been successfully signed out.",
-    });
-    
-    // Redirect to homepage after sign out
-    window.location.href = '/';
+    const { error } = await supabase.auth.signOut();
+    if (!error) {
+      toast({
+        title: "Signed out",
+        description: "You have been successfully signed out.",
+      });
+    }
   };
 
   return (

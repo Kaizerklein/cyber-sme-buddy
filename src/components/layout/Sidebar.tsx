@@ -56,12 +56,14 @@ export function Sidebar() {
   const checkAdminStatus = async () => {
     if (!user) return;
 
-    const { data } = await supabase
+    console.log('Checking admin status for user:', user.id);
+    const { data, error } = await supabase
       .from('admin_roles')
       .select('id')
       .eq('user_id', user.id)
       .maybeSingle();
 
+    console.log('Admin check result:', { data, error, isAdmin: !!data });
     setIsAdmin(!!data);
   };
 
