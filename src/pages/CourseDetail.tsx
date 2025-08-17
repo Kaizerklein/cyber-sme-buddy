@@ -276,16 +276,25 @@ export default function CourseDetail() {
             <CardTitle>Course Video</CardTitle>
           </CardHeader>
           <CardContent>
-            <video 
-              controls 
-              className="w-full rounded-lg"
-              poster=""
-            >
-              <source src={course.video_url} type="video/mp4" />
-              <source src={course.video_url} type="video/webm" />
-              <source src={course.video_url} type="video/ogg" />
-              Your browser does not support the video tag.
-            </video>
+            {course.video_url.includes('drive.google.com') ? (
+              <iframe
+                src={course.video_url}
+                className="w-full h-96 rounded-lg"
+                allowFullScreen
+                title="Course Video"
+              />
+            ) : (
+              <video 
+                controls 
+                className="w-full rounded-lg"
+                poster=""
+              >
+                <source src={course.video_url} type="video/mp4" />
+                <source src={course.video_url} type="video/webm" />
+                <source src={course.video_url} type="video/ogg" />
+                Your browser does not support the video tag.
+              </video>
+            )}
           </CardContent>
         </Card>
       )}
