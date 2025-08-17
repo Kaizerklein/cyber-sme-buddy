@@ -278,7 +278,9 @@ export default function CourseDetail() {
           <CardContent>
             {course.video_url.includes('drive.google.com') ? (
               <iframe
-                src={course.video_url}
+                src={course.video_url.includes('/preview') 
+                  ? course.video_url.replace('/preview', '/preview?usp=embed') 
+                  : course.video_url}
                 className="w-full h-96 rounded-lg"
                 allowFullScreen
                 title="Course Video"
