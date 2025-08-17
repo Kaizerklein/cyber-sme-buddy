@@ -50,6 +50,8 @@ export default function AdminCourseManagement() {
   const [editingCourse, setEditingCourse] = useState<Course | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [uploadingVideo, setUploadingVideo] = useState(false);
+  const [videoSource, setVideoSource] = useState<'upload' | 'drive'>('upload');
+  const [googleDriveUrl, setGoogleDriveUrl] = useState('');
 
   const [formData, setFormData] = useState({
     title: '',
@@ -133,16 +135,37 @@ export default function AdminCourseManagement() {
     return data.publicUrl;
   };
 
+  const convertGoogleDriveUrl = (url: string) => {
+    if (!url) return '';
+    
+    // Convert Google Drive share URL to embed URL
+    const fileIdMatch = url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/);
+    if (fileIdMatch) {
+      return `https://drive.google.com/file/d/${fileIdMatch[1]}/preview`;
+    }
+    
+    // If it's already an embed URL, return as is
+    if (url.includes('/preview')) {
+      return url;
+    }
+    
+    return url;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
 
-    const videoFile = (e.currentTarget as HTMLFormElement).video_file?.files?.[0];
     let videoUrl = editingCourse?.video_url;
 
-    if (videoFile) {
-      videoUrl = await handleVideoUpload(videoFile);
-      if (!videoUrl) return;
+    if (videoSource === 'upload') {
+      const videoFile = (e.currentTarget as HTMLFormElement).video_file?.files?.[0];
+      if (videoFile) {
+        videoUrl = await handleVideoUpload(videoFile);
+        if (!videoUrl) return;
+      }
+    } else if (videoSource === 'drive') {
+      videoUrl = convertGoogleDriveUrl(googleDriveUrl);
     }
 
     const courseData = {
@@ -204,6 +227,8 @@ export default function AdminCourseManagement() {
       category: '',
       is_published: false,
     });
+    setVideoSource('upload');
+    setGoogleDriveUrl('');
   };
 
   const handleEdit = (course: Course) => {
@@ -217,6 +242,15 @@ export default function AdminCourseManagement() {
       category: course.category,
       is_published: course.is_published,
     });
+    
+    // Determine video source based on URL
+    if (course.video_url?.includes('drive.google.com')) {
+      setVideoSource('drive');
+      setGoogleDriveUrl(course.video_url);
+    } else {
+      setVideoSource('upload');
+      setGoogleDriveUrl('');
+    }
   };
 
   const handleDelete = async (courseId: string) => {
@@ -335,19 +369,62 @@ export default function AdminCourseManagement() {
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="video_file">Course Video (MP4, WebM, OGV)</Label>
-        <Input
-          id="video_file"
-          name="video_file"
-          type="file"
-          accept="video/*"
-          disabled={uploadingVideo}
-        />
-        {editingCourse?.video_url && (
-          <p className="text-sm text-muted-foreground">
-            Current video: {editingCourse.video_url.split('/').pop()}
-          </p>
+      <div className="space-y-4">
+        <Label>Video Source</Label>
+        <div className="flex gap-4">
+          <div className="flex items-center space-x-2">
+            <input
+              type="radio"
+              id="upload"
+              name="videoSource"
+              checked={videoSource === 'upload'}
+              onChange={() => setVideoSource('upload')}
+              className="h-4 w-4"
+            />
+            <Label htmlFor="upload">Upload Video</Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <input
+              type="radio"
+              id="drive"
+              name="videoSource"
+              checked={videoSource === 'drive'}
+              onChange={() => setVideoSource('drive')}
+              className="h-4 w-4"
+            />
+            <Label htmlFor="drive">Google Drive URL</Label>
+          </div>
+        </div>
+
+        {videoSource === 'upload' ? (
+          <div className="space-y-2">
+            <Label htmlFor="video_file">Course Video (MP4, WebM, OGV)</Label>
+            <Input
+              id="video_file"
+              name="video_file"
+              type="file"
+              accept="video/*"
+              disabled={uploadingVideo}
+            />
+            {editingCourse?.video_url && !editingCourse.video_url.includes('drive.google.com') && (
+              <p className="text-sm text-muted-foreground">
+                Current video: {editingCourse.video_url.split('/').pop()}
+              </p>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-2">
+            <Label htmlFor="google_drive_url">Google Drive Share URL</Label>
+            <Input
+              id="google_drive_url"
+              value={googleDriveUrl}
+              onChange={(e) => setGoogleDriveUrl(e.target.value)}
+              placeholder="https://drive.google.com/file/d/..."
+            />
+            <p className="text-sm text-muted-foreground">
+              Paste the Google Drive share URL. Make sure the file is set to "Anyone with the link can view".
+            </p>
+          </div>
         )}
       </div>
 
