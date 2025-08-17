@@ -24,6 +24,7 @@ interface Course {
   duration_minutes: number;
   difficulty_level: string;
   category: string;
+  video_url?: string;
 }
 
 interface UserProgress {
@@ -269,6 +270,26 @@ export default function CourseDetail() {
       </Card>
 
       {/* Course Content */}
+      {course.video_url && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Course Video</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <video 
+              controls 
+              className="w-full rounded-lg"
+              poster=""
+            >
+              <source src={course.video_url} type="video/mp4" />
+              <source src={course.video_url} type="video/webm" />
+              <source src={course.video_url} type="video/ogg" />
+              Your browser does not support the video tag.
+            </video>
+          </CardContent>
+        </Card>
+      )}
+
       <Card>
         <CardHeader>
           <CardTitle>Course Content</CardTitle>

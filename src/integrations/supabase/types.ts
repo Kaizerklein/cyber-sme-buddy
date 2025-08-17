@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       courses: {
         Row: {
           category: string
@@ -26,6 +50,7 @@ export type Database = {
           is_published: boolean | null
           title: string
           updated_at: string
+          video_url: string | null
         }
         Insert: {
           category: string
@@ -38,6 +63,7 @@ export type Database = {
           is_published?: boolean | null
           title: string
           updated_at?: string
+          video_url?: string | null
         }
         Update: {
           category?: string
@@ -50,6 +76,7 @@ export type Database = {
           is_published?: boolean | null
           title?: string
           updated_at?: string
+          video_url?: string | null
         }
         Relationships: []
       }
