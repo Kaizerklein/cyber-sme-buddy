@@ -152,6 +152,96 @@ export type Database = {
         }
         Relationships: []
       }
+      phishing_photo_results: {
+        Row: {
+          created_at: string
+          id: string
+          is_correct: boolean
+          photo_test_id: string | null
+          question_number: number
+          session_id: string | null
+          time_taken_seconds: number | null
+          user_answer: boolean
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_correct: boolean
+          photo_test_id?: string | null
+          question_number: number
+          session_id?: string | null
+          time_taken_seconds?: number | null
+          user_answer: boolean
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_correct?: boolean
+          photo_test_id?: string | null
+          question_number?: number
+          session_id?: string | null
+          time_taken_seconds?: number | null
+          user_answer?: boolean
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "phishing_photo_results_photo_test_id_fkey"
+            columns: ["photo_test_id"]
+            isOneToOne: false
+            referencedRelation: "phishing_photo_tests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "phishing_photo_results_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "phishing_test_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      phishing_photo_tests: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          difficulty_level: string | null
+          explanation: string | null
+          id: string
+          image_url: string
+          is_phishing: boolean
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          difficulty_level?: string | null
+          explanation?: string | null
+          id?: string
+          image_url: string
+          is_phishing: boolean
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          difficulty_level?: string | null
+          explanation?: string | null
+          id?: string
+          image_url?: string
+          is_phishing?: boolean
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       phishing_results: {
         Row: {
           created_at: string
@@ -229,6 +319,54 @@ export type Database = {
           sender_name?: string
           subject?: string
           title?: string
+        }
+        Relationships: []
+      }
+      phishing_test_sessions: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          current_question: number
+          id: string
+          is_completed: boolean
+          questions_data: Json
+          score: number
+          session_type: string
+          started_at: string
+          time_limit_minutes: number | null
+          total_questions: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          current_question?: number
+          id?: string
+          is_completed?: boolean
+          questions_data?: Json
+          score?: number
+          session_type?: string
+          started_at?: string
+          time_limit_minutes?: number | null
+          total_questions?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          current_question?: number
+          id?: string
+          is_completed?: boolean
+          questions_data?: Json
+          score?: number
+          session_type?: string
+          started_at?: string
+          time_limit_minutes?: number | null
+          total_questions?: number
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
