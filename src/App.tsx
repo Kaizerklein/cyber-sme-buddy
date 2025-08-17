@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
+import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Courses from "./pages/Courses";
@@ -28,13 +29,13 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<AuthForm />} />
-            <Route path="/dashboard" element={<DashboardLayout><Dashboard /></DashboardLayout>} />
-            <Route path="/courses" element={<DashboardLayout><Courses /></DashboardLayout>} />
-            <Route path="/courses/:courseId" element={<DashboardLayout><CourseDetail /></DashboardLayout>} />
-            <Route path="/phishing-simulator" element={<DashboardLayout><PhishingSimulator /></DashboardLayout>} />
-            <Route path="/progress" element={<DashboardLayout><Progress /></DashboardLayout>} />
-            <Route path="/guide" element={<DashboardLayout><SecurityGuide /></DashboardLayout>} />
-            <Route path="/profile" element={<DashboardLayout><ProfileSettings /></DashboardLayout>} />
+            <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout><Dashboard /></DashboardLayout></ProtectedRoute>} />
+            <Route path="/courses" element={<ProtectedRoute><DashboardLayout><Courses /></DashboardLayout></ProtectedRoute>} />
+            <Route path="/courses/:courseId" element={<ProtectedRoute><DashboardLayout><CourseDetail /></DashboardLayout></ProtectedRoute>} />
+            <Route path="/phishing-simulator" element={<ProtectedRoute><DashboardLayout><PhishingSimulator /></DashboardLayout></ProtectedRoute>} />
+            <Route path="/progress" element={<ProtectedRoute><DashboardLayout><Progress /></DashboardLayout></ProtectedRoute>} />
+            <Route path="/guide" element={<ProtectedRoute><DashboardLayout><SecurityGuide /></DashboardLayout></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><DashboardLayout><ProfileSettings /></DashboardLayout></ProtectedRoute>} />
             
             <Route path="*" element={<NotFound />} />
           </Routes>

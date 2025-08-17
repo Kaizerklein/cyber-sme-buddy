@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,20 +13,42 @@ export function AuthForm() {
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, user } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirect authenticated users to dashboard
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [user, navigate]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await signIn(email, password);
+    const { error } = await signIn(email, password);
     setLoading(false);
+    
+    // Navigation will be handled by the useEffect above when user state changes
+    if (!error) {
+      // Reset form on successful sign in
+      setEmail('');
+      setPassword('');
+    }
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await signUp(email, password, fullName);
+    const { error } = await signUp(email, password, fullName);
     setLoading(false);
+    
+    if (!error) {
+      // Reset form on successful sign up
+      setEmail('');
+      setPassword('');
+      setFullName('');
+    }
   };
 
   return (
