@@ -53,6 +53,78 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_preferences: {
+        Row: {
+          achievement_alerts: boolean
+          course_reminders: boolean
+          created_at: string
+          email_notifications: boolean
+          id: string
+          security_alerts: boolean
+          updated_at: string
+          user_id: string
+          weekly_digest: boolean
+        }
+        Insert: {
+          achievement_alerts?: boolean
+          course_reminders?: boolean
+          created_at?: string
+          email_notifications?: boolean
+          id?: string
+          security_alerts?: boolean
+          updated_at?: string
+          user_id: string
+          weekly_digest?: boolean
+        }
+        Update: {
+          achievement_alerts?: boolean
+          course_reminders?: boolean
+          created_at?: string
+          email_notifications?: boolean
+          id?: string
+          security_alerts?: boolean
+          updated_at?: string
+          user_id?: string
+          weekly_digest?: boolean
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          data: Json | null
+          id: string
+          message: string
+          read: boolean
+          title: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data?: Json | null
+          id?: string
+          message: string
+          read?: boolean
+          title: string
+          type?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json | null
+          id?: string
+          message?: string
+          read?: boolean
+          title?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       phishing_results: {
         Row: {
           created_at: string
