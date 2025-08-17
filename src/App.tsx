@@ -9,6 +9,9 @@ import Dashboard from "./pages/Dashboard";
 import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
 import PhishingSimulator from "./pages/PhishingSimulator";
+import Progress from "./pages/Progress";
+import SecurityGuide from "./pages/SecurityGuide";
+import ProfileSettings from "./components/profile/ProfileSettings";
 import { AuthForm } from "./components/auth/AuthForm";
 import { DashboardLayout } from "./components/layout/DashboardLayout";
 import NotFound from "./pages/NotFound";
@@ -29,8 +32,10 @@ const App = () => (
             <Route path="/courses" element={<DashboardLayout><Courses /></DashboardLayout>} />
             <Route path="/courses/:courseId" element={<DashboardLayout><CourseDetail /></DashboardLayout>} />
             <Route path="/phishing-simulator" element={<DashboardLayout><PhishingSimulator /></DashboardLayout>} />
-            <Route path="/progress" element={<DashboardLayout><div className="text-center py-12"><h2 className="text-2xl font-bold">Progress page coming soon!</h2></div></DashboardLayout>} />
-            <Route path="/guide" element={<DashboardLayout><div className="text-center py-12"><h2 className="text-2xl font-bold">Security Guide coming soon!</h2></div></DashboardLayout>} />
+            <Route path="/progress" element={<DashboardLayout><Progress /></DashboardLayout>} />
+            <Route path="/guide" element={<DashboardLayout><SecurityGuide /></DashboardLayout>} />
+            <Route path="/profile" element={<DashboardLayout><ProfileSettings /></DashboardLayout>} />
+            
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
