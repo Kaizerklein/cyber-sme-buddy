@@ -63,12 +63,30 @@ export default function Progress() {
       const userProgress = progressRes.data || [];
       const phishingResults = phishingRes.data || [];
 
-      // Calculate weekly activity (mock data for demonstration)
-      const weeklyActivity = Array.from({ length: 7 }, (_, i) => ({
-        day: format(new Date(Date.now() - i * 24 * 60 * 60 * 1000), 'EEE'),
-        courses: Math.floor(Math.random() * 3),
-        phishing: Math.floor(Math.random() * 5),
-      })).reverse();
+      // Calculate weekly activity based on real data
+      const weeklyActivity = Array.from({ length: 7 }, (_, i) => {
+        const date = new Date(Date.now() - i * 24 * 60 * 60 * 1000);
+        const dayStart = new Date(date.setHours(0, 0, 0, 0));
+        const dayEnd = new Date(date.setHours(23, 59, 59, 999));
+        
+        const coursesCompleted = userProgress.filter(p => 
+          p.completed_at && 
+          new Date(p.completed_at) >= dayStart && 
+          new Date(p.completed_at) <= dayEnd
+        ).length;
+        
+        const phishingAttempts = phishingResults.filter(r => 
+          r.created_at && 
+          new Date(r.created_at) >= dayStart && 
+          new Date(r.created_at) <= dayEnd
+        ).length;
+        
+        return {
+          day: format(date, 'EEE'),
+          courses: coursesCompleted,
+          phishing: phishingAttempts,
+        };
+      }).reverse();
 
       // Calculate category progress
       const categories = [...new Set(courses.map(c => c.category))];
@@ -94,7 +112,7 @@ export default function Progress() {
       });
 
       // Calculate achievements
-      calculateAchievements(userProgress, phishingResults, courses);
+      calculateAchievements(userProgress, phishingResults, courses, categories);
     } catch (error) {
       console.error('Error fetching progress data:', error);
     } finally {
@@ -102,7 +120,7 @@ export default function Progress() {
     }
   };
 
-  const calculateAchievements = (userProgress: any[], phishingResults: any[], courses: any[]) => {
+  const calculateAchievements = (userProgress: any[], phishingResults: any[], courses: any[], categories: string[]) => {
     const completedCourses = userProgress.filter(p => p.completed).length;
     const phishingSuccess = phishingResults.filter(r => r.is_correct).length;
     const totalPhishing = phishingResults.length;
@@ -150,8 +168,8 @@ export default function Progress() {
         title: 'Dedicated Learner',
         description: 'Maintain a 7-day learning streak',
         icon: Star,
-        earned: false, // Would need to implement streak tracking
-        progress: 3,
+        earned: false, // Streak tracking would need to be implemented with proper date tracking
+        progress: 0,
         target: 7
       },
       {
@@ -159,9 +177,13 @@ export default function Progress() {
         title: 'Well Rounded',
         description: 'Complete courses in all categories',
         icon: Award,
-        earned: false, // Would calculate based on category completion
-        progress: 2,
-        target: 4
+        earned: categories.length > 0 && categories.every(category => 
+          userProgress.some(p => p.completed && courses.find(c => c.id === p.course_id && c.category === category))
+        ),
+        progress: categories.filter(category => 
+          userProgress.some(p => p.completed && courses.find(c => c.id === p.course_id && c.category === category))
+        ).length,
+        target: categories.length || 1
       }
     ];
 
