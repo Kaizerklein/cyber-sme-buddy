@@ -20,6 +20,7 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { Progress } from '@/components/ui/progress';
 import {
   Dialog,
   DialogContent,
@@ -50,6 +51,7 @@ export default function AdminCourseManagement() {
   const [editingCourse, setEditingCourse] = useState<Course | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [uploadingVideo, setUploadingVideo] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [videoSource, setVideoSource] = useState<'upload' | 'drive'>('upload');
   const [googleDriveUrl, setGoogleDriveUrl] = useState('');
 
@@ -109,13 +111,29 @@ export default function AdminCourseManagement() {
     if (!file) return null;
 
     setUploadingVideo(true);
+    setUploadProgress(0);
+    
     const fileExt = file.name.split('.').pop();
     const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
     const filePath = `${fileName}`;
 
+    // Simulate progress for large files
+    const progressInterval = setInterval(() => {
+      setUploadProgress(prev => {
+        if (prev >= 90) {
+          clearInterval(progressInterval);
+          return 90;
+        }
+        return prev + 10;
+      });
+    }, 500);
+
     const { error: uploadError } = await supabase.storage
       .from('course-videos')
       .upload(filePath, file);
+
+    clearInterval(progressInterval);
+    setUploadProgress(100);
 
     if (uploadError) {
       toast({
@@ -124,6 +142,7 @@ export default function AdminCourseManagement() {
         variant: "destructive",
       });
       setUploadingVideo(false);
+      setUploadProgress(0);
       return null;
     }
 
@@ -131,7 +150,13 @@ export default function AdminCourseManagement() {
       .from('course-videos')
       .getPublicUrl(filePath);
 
+    toast({
+      title: "Success",
+      description: "Video uploaded successfully!",
+    });
+
     setUploadingVideo(false);
+    setUploadProgress(0);
     return data.publicUrl;
   };
 
@@ -406,11 +431,23 @@ export default function AdminCourseManagement() {
               accept="video/*"
               disabled={uploadingVideo}
             />
+            {uploadingVideo && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span>Uploading video...</span>
+                  <span>{uploadProgress}%</span>
+                </div>
+                <Progress value={uploadProgress} className="w-full" />
+              </div>
+            )}
             {editingCourse?.video_url && !editingCourse.video_url.includes('drive.google.com') && (
               <p className="text-sm text-muted-foreground">
                 Current video: {editingCourse.video_url.split('/').pop()}
               </p>
             )}
+            <p className="text-sm text-muted-foreground">
+              Note: File size limit depends on your Supabase plan. Free tier: 50MB, paid plans support larger files up to 5GB.
+            </p>
           </div>
         ) : (
           <div className="space-y-2">
