@@ -93,11 +93,18 @@ export function Sidebar() {
       href: '/guide',
       icon: Shield,
     },
-    ...(isAdmin ? [{
-      title: 'Admin: Courses',
-      href: '/admin/courses',
-      icon: Settings,
-    }] : []),
+    ...(isAdmin ? [
+      {
+        title: 'Admin: Courses',
+        href: '/admin/courses',
+        icon: Settings,
+      },
+      {
+        title: 'Admin: Phishing Tests',
+        href: '/admin/phishing-test',
+        icon: Target,
+      }
+    ] : []),
   ];
 
   return (

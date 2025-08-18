@@ -13,6 +13,7 @@ import PhishingSimulator from "./pages/PhishingSimulator";
 import Progress from "./pages/Progress";
 import SecurityGuide from "./pages/SecurityGuide";
 import AdminCourseManagement from "./pages/AdminCourseManagement";
+import AdminPhishingTest from "./pages/AdminPhishingTest";
 import ProfileSettings from "./components/profile/ProfileSettings";
 import { AuthForm } from "./components/auth/AuthForm";
 import { DashboardLayout } from "./components/layout/DashboardLayout";
@@ -37,6 +38,7 @@ const App = () => (
             <Route path="/progress" element={<ProtectedRoute><DashboardLayout><Progress /></DashboardLayout></ProtectedRoute>} />
             <Route path="/guide" element={<ProtectedRoute><DashboardLayout><SecurityGuide /></DashboardLayout></ProtectedRoute>} />
             <Route path="/admin/courses" element={<ProtectedRoute><DashboardLayout><AdminCourseManagement /></DashboardLayout></ProtectedRoute>} />
+            <Route path="/admin/phishing-test" element={<ProtectedRoute><DashboardLayout><AdminPhishingTest /></DashboardLayout></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><DashboardLayout><ProfileSettings /></DashboardLayout></ProtectedRoute>} />
             
             <Route path="*" element={<NotFound />} />
