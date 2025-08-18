@@ -3,7 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Shield, CheckCircle, XCircle, Image } from 'lucide-react';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Shield, CheckCircle, XCircle, Image, ZoomIn } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
@@ -326,11 +327,31 @@ export default function PhishingSimulator() {
             <CardContent className="space-y-6">
               {/* Image */}
               <div className="flex justify-center">
-                <img
-                  src={currentPhotoTest.image_url}
-                  alt="Phishing test image"
-                  className="max-w-full max-h-96 rounded-lg border shadow-sm"
-                />
+                <div className="relative group">
+                  <img
+                    src={currentPhotoTest.image_url}
+                    alt="Phishing test image"
+                    className="max-w-full max-h-96 rounded-lg border shadow-sm"
+                  />
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        className="absolute top-2 right-2 opacity-80 hover:opacity-100"
+                      >
+                        <ZoomIn className="w-4 h-4" />
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-4xl max-h-[90vh] p-2">
+                      <img
+                        src={currentPhotoTest.image_url}
+                        alt="Phishing test image - enlarged"
+                        className="w-full h-auto max-h-[calc(90vh-2rem)] object-contain rounded-lg"
+                      />
+                    </DialogContent>
+                  </Dialog>
+                </div>
               </div>
 
               {/* Answer Section */}
