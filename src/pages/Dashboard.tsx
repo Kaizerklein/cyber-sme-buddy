@@ -169,7 +169,7 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{getSecurityLevel().level}</div>
-            <Badge className={`mt-1 ${getSecurityLevel().textColor} bg-opacity-20`}>
+            <Badge className={`mt-1 ${getSecurityLevel().textColor} bg-opacity-20 text-white`}>
               {calculatePhishingSuccessRate()}% accuracy
             </Badge>
           </CardContent>
