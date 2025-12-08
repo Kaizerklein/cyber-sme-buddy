@@ -1,1 +1,10 @@
 project_id = "ttfylrdftphnluaanpnt"
+
+[functions.send-notification]
+verify_jwt = true
+
+[functions.weekly-digest]
+verify_jwt = true
+
+[functions.rate-limited-auth]
+verify_jwt = false
