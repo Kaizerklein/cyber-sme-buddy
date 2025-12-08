@@ -209,9 +209,12 @@ export type Database = {
           created_at: string
           description: string | null
           difficulty_level: string | null
+          email_headers: string | null
+          encoded_urls: Json | null
           explanation: string | null
           id: string
           image_url: string
+          ioc_list: Json | null
           is_phishing: boolean
           title: string
           updated_at: string
@@ -221,9 +224,12 @@ export type Database = {
           created_at?: string
           description?: string | null
           difficulty_level?: string | null
+          email_headers?: string | null
+          encoded_urls?: Json | null
           explanation?: string | null
           id?: string
           image_url: string
+          ioc_list?: Json | null
           is_phishing: boolean
           title: string
           updated_at?: string
@@ -233,9 +239,12 @@ export type Database = {
           created_at?: string
           description?: string | null
           difficulty_level?: string | null
+          email_headers?: string | null
+          encoded_urls?: Json | null
           explanation?: string | null
           id?: string
           image_url?: string
+          ioc_list?: Json | null
           is_phishing?: boolean
           title?: string
           updated_at?: string
@@ -400,6 +409,101 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limit_attempts: {
+        Row: {
+          attempt_count: number | null
+          blocked_until: string | null
+          created_at: string | null
+          endpoint: string
+          first_attempt_at: string | null
+          id: string
+          ip_address: string
+          last_attempt_at: string | null
+        }
+        Insert: {
+          attempt_count?: number | null
+          blocked_until?: string | null
+          created_at?: string | null
+          endpoint: string
+          first_attempt_at?: string | null
+          id?: string
+          ip_address: string
+          last_attempt_at?: string | null
+        }
+        Update: {
+          attempt_count?: number | null
+          blocked_until?: string | null
+          created_at?: string | null
+          endpoint?: string
+          first_attempt_at?: string | null
+          id?: string
+          ip_address?: string
+          last_attempt_at?: string | null
+        }
+        Relationships: []
+      }
+      security_incidents: {
+        Row: {
+          created_at: string | null
+          geolocation_country: string | null
+          id: string
+          incident_type: string
+          ip_address: string | null
+          missed_iocs: Json | null
+          photo_test_id: string | null
+          raw_event_data: Json | null
+          session_id: string | null
+          severity: string | null
+          time_to_decision_seconds: number | null
+          timestamp: string | null
+          user_agent: string | null
+          user_answer: boolean | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          geolocation_country?: string | null
+          id?: string
+          incident_type: string
+          ip_address?: string | null
+          missed_iocs?: Json | null
+          photo_test_id?: string | null
+          raw_event_data?: Json | null
+          session_id?: string | null
+          severity?: string | null
+          time_to_decision_seconds?: number | null
+          timestamp?: string | null
+          user_agent?: string | null
+          user_answer?: boolean | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          geolocation_country?: string | null
+          id?: string
+          incident_type?: string
+          ip_address?: string | null
+          missed_iocs?: Json | null
+          photo_test_id?: string | null
+          raw_event_data?: Json | null
+          session_id?: string | null
+          severity?: string | null
+          time_to_decision_seconds?: number | null
+          timestamp?: string | null
+          user_agent?: string | null
+          user_answer?: boolean | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_incidents_photo_test_id_fkey"
+            columns: ["photo_test_id"]
+            isOneToOne: false
+            referencedRelation: "phishing_photo_tests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_progress: {
         Row: {
           completed: boolean | null
@@ -446,7 +550,18 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      user_risk_scores: {
+        Row: {
+          avg_decision_time: number | null
+          full_name: string | null
+          phishing_failures: number | null
+          risk_level: string | null
+          risk_score: number | null
+          total_incidents: number | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       is_admin_user: { Args: { user_id_param: string }; Returns: boolean }
