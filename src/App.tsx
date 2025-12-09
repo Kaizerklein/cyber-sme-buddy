@@ -40,8 +40,10 @@ const App = () => (
             <Route path="/progress" element={<ProtectedRoute><DashboardLayout><Progress /></DashboardLayout></ProtectedRoute>} />
             <Route path="/guide" element={<ProtectedRoute><DashboardLayout><SecurityGuide /></DashboardLayout></ProtectedRoute>} />
             <Route path="/admin/courses" element={<ProtectedRoute><DashboardLayout><AdminCourseManagement /></DashboardLayout></ProtectedRoute>} />
-            <Route path="/admin/phishing-test" element={<ProtectedRoute><DashboardLayout><AdminPhishingTest /></DashboardLayout></ProtectedRoute>} />
-            <Route path="/profile" element={<ProtectedRoute><DashboardLayout><ProfileSettings /></DashboardLayout></ProtectedRoute>} />
+              <Route path="/admin/phishing-test" element={<ProtectedRoute><DashboardLayout><AdminPhishingTest /></DashboardLayout></ProtectedRoute>} />
+              <Route path="/admin/incidents" element={<ProtectedRoute><DashboardLayout><AdminIncidentDashboard /></DashboardLayout></ProtectedRoute>} />
+              <Route path="/security-playground" element={<ProtectedRoute><DashboardLayout><SecurityPlayground /></DashboardLayout></ProtectedRoute>} />
+              <Route path="/profile" element={<ProtectedRoute><DashboardLayout><ProfileSettings /></DashboardLayout></ProtectedRoute>} />
             
             <Route path="*" element={<NotFound />} />
           </Routes>

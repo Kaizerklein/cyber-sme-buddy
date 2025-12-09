@@ -6,8 +6,9 @@ import {
   Shield, 
   BarChart3, 
   Target,
-  GraduationCap,
-  Settings
+  Settings,
+  FlaskConical,
+  AlertTriangle
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
@@ -67,7 +68,7 @@ export function Sidebar() {
     setIsAdmin(!!data);
   };
 
-  const navigationItems = [
+const navigationItems = [
     {
       title: 'Dashboard',
       href: '/dashboard',
@@ -82,6 +83,11 @@ export function Sidebar() {
       title: 'Phishing Simulator',
       href: '/phishing-simulator',
       icon: Target,
+    },
+    {
+      title: 'Security Playground',
+      href: '/security-playground',
+      icon: FlaskConical,
     },
     {
       title: 'My Progress',
@@ -103,6 +109,11 @@ export function Sidebar() {
         title: 'Admin: Phishing Tests',
         href: '/admin/phishing-test',
         icon: Target,
+      },
+      {
+        title: 'Admin: Incidents',
+        href: '/admin/incidents',
+        icon: AlertTriangle,
       }
     ] : []),
   ];
