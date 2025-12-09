@@ -14,6 +14,8 @@ import Progress from "./pages/Progress";
 import SecurityGuide from "./pages/SecurityGuide";
 import AdminCourseManagement from "./pages/AdminCourseManagement";
 import AdminPhishingTest from "./pages/AdminPhishingTest";
+import AdminIncidentDashboard from "./pages/AdminIncidentDashboard";
+import SecurityPlayground from "./pages/SecurityPlayground";
 import ProfileSettings from "./components/profile/ProfileSettings";
 import { AuthForm } from "./components/auth/AuthForm";
 import { DashboardLayout } from "./components/layout/DashboardLayout";
