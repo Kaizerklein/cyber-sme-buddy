@@ -194,18 +194,13 @@ const PhishingSimulator = () => {
     }
   };
 
-  const handleHeaderComplete = async (results: { 
-    correctlyIdentified: string[]; 
-    missed: string[]; 
-    falsePositives: string[]; 
-    timeTaken: number 
-  }) => {
-    const totalIocs = results.correctlyIdentified.length + results.missed.length;
-    const accuracy = totalIocs > 0 ? results.correctlyIdentified.length / totalIocs : 0;
+  const handleHeaderComplete = async (identifiedIoCs: string[], missed: string[], timeTaken: number) => {
+    const totalIocs = identifiedIoCs.length + missed.length;
+    const accuracy = totalIocs > 0 ? identifiedIoCs.length / totalIocs : 0;
     const isCorrect = accuracy >= 0.6;
 
     if (!isCorrect && currentPhotoTest) {
-      await logForensicIncident('header-analysis', isCorrect, results.timeTaken, results.missed);
+      await logForensicIncident('header-analysis', isCorrect, timeTaken, missed);
     }
 
     toast(isCorrect ? 'Good analysis!' : 'Review missed indicators', {
@@ -213,22 +208,22 @@ const PhishingSimulator = () => {
     });
   };
 
-  const handleUrlComplete = async (results: { 
-    correct: number; 
-    total: number; 
-    timeTaken: number;
-    answers: { urlId: string; correct: boolean }[] 
-  }) => {
-    const accuracy = results.total > 0 ? results.correct / results.total : 0;
+  const handleUrlComplete = async (
+    results: { urlId: string; userAnswer: boolean; isCorrect: boolean }[], 
+    timeTaken: number
+  ) => {
+    const correct = results.filter(r => r.isCorrect).length;
+    const total = results.length;
+    const accuracy = total > 0 ? correct / total : 0;
     const isCorrect = accuracy >= 0.6;
 
     if (!isCorrect && currentPhotoTest) {
-      const missedUrls = results.answers.filter(a => !a.correct).map(a => a.urlId);
-      await logForensicIncident('url-forensics', isCorrect, results.timeTaken, missedUrls);
+      const missedUrls = results.filter(a => !a.isCorrect).map(a => a.urlId);
+      await logForensicIncident('url-forensics', isCorrect, timeTaken, missedUrls);
     }
 
     toast(isCorrect ? 'Good URL analysis!' : 'Review missed malicious URLs', {
-      description: `Score: ${results.correct}/${results.total}`
+      description: `Score: ${correct}/${total}`
     });
   };
 
@@ -280,16 +275,22 @@ Content-Type: text/html; charset=UTF-8`;
       returnPath: 'bounce@suspicious-server.net',
       subject: currentPhotoTest.title,
       date: new Date().toUTCString(),
-      received: 'from mail.suspicious-server.net (192.168.1.100)',
-      spf: 'fail' as const,
-      dkim: 'fail' as const,
-      dmarc: 'fail' as const,
-      raw: sampleHeaders
+      receivedFrom: 'mail.suspicious-server.net (192.168.1.100)',
+      spfResult: 'FAIL' as const,
+      dkimResult: 'FAIL' as const,
+      dmarcResult: 'FAIL' as const,
     };
 
-    const correctIocs = currentPhotoTest.ioc_list.length > 0 
+    const iocStrings = currentPhotoTest.ioc_list.length > 0 
       ? currentPhotoTest.ioc_list 
       : ['spf_fail', 'dkim_fail', 'dmarc_fail', 'reply_mismatch'];
+
+    const correctIocs = iocStrings.map(id => ({
+      id,
+      name: id.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+      description: `Indicator: ${id}`,
+      isCritical: ['spf_fail', 'dkim_fail', 'dmarc_fail', 'reply_mismatch'].includes(id)
+    }));
 
     return (
       <EmailHeaderAnalyzer
